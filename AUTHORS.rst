@@ -2,4 +2,4 @@
 Contributors
 ============
 
-* Aurélien <aurelien.amilin@gmail.com>
+* Aurélien <aurelien@clustaar.com>

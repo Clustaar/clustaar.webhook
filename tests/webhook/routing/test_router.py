@@ -46,4 +46,4 @@ class TestFind(object):
 
         route = router.find(request)
         route.process(request, None, None)
-        handler.assert_called_once()
+        assert handler.called

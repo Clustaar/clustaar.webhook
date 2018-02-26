@@ -119,3 +119,20 @@ class JSONKeyExists(object):
             request (HTTPRequest): incoming HTTP request
         """
         return self._path.search(request.json) != KEY_NOT_FOUND
+
+
+def StepID(id):
+    """Validates that the data.step.id correspond to the expected id
+
+    Args:
+        id (str|list<str>): step IDs
+
+    Returns:
+        Filter
+    """
+    if isinstance(id, str):
+        return JSONKeyEquals("data.step.id", id)
+    elif isinstance(id, (list, set)):
+        return JSONKeyIn("data.step.id", id)
+    else:
+        raise TypeError("id must be of type str or list<str>")

@@ -56,7 +56,7 @@ class TestCall(object):
                 "Authorization": "Basic " + auth_value
             }
         )
-        handler.assert_called_once()
+        assert handler.called
 
 
 class TestOn(object):
@@ -73,4 +73,4 @@ class TestOn(object):
                 "Authorization": "Basic " + auth_value
             }
         )
-        handler.assert_called_once()
+        assert handler.called

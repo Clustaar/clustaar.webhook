@@ -1,4 +1,0 @@
-falcon~=1.4.1
-ujson~=1.35
-jmespath~=0.9.3
-clustaar.schemas~=0.1.0

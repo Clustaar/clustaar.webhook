@@ -7,9 +7,6 @@ build:
         - virtualenv:
             name: setup virtual environment
             install_wheel: true
-        - script:
-            name: Install runtime dependencies
-            code: pip install -r requirements.txt
         - pip-install:
             name: Install test dependencies
             requirements_file: test-requirements.txt

@@ -3,7 +3,7 @@ import hashlib
 import hmac
 
 
-SIGNATURE_HEADER = "X-Signature"
+SIGNATURE_HEADER = "X-Hub-Signature"
 
 
 class ValidateSignatureMiddleware(object):
@@ -55,8 +55,12 @@ class ValidateSignatureMiddleware(object):
             self._raise("The request's signature hash function is invalid "
                         "(should be one of %s)." % list(self._hash_functions.keys()))
 
+        signed_headers = ("date",)
+        buffer = "\n".join(["%s=%s" % (header, req.get_header(header))
+                            for header in signed_headers])
+        buffer += "\n" + req.body.decode("utf-8")
         expected_signature = hmac.new(self._private_key,
-                                      req.body,
+                                      buffer.encode(),
                                       hash_function).hexdigest()
         if expected_signature != signature:
             self._raise("The request's signature is invalid.")

@@ -30,14 +30,14 @@ class TestCall(object):
             "Authorization": "Basic " + auth_value
         })
         assert result.json == {
-            "description": ("The value provided for the X-Signature header is invalid. "
+            "description": ("The value provided for the X-Hub-Signature header is invalid. "
                             "The request's signature is missing."),
             "title": "Invalid header value"
         }
 
     def test_handles_invalid_credentials(self, client):
         result = client.simulate_post("/", body="{}",
-                                      headers={"X-Signature": "sha1=7876c938d38e99b954b3d839c7bafb343d29e776"})
+                                      headers={"X-Hub-Signature": "sha1=fc2bdea0e6a9e0dc333dece7568b5c3337a92342"})
         assert result.json == {
             "description": "This call needs authentication",
             "title": "Invalid credentials"
@@ -52,7 +52,7 @@ class TestCall(object):
             "/",
             body=body,
             headers={
-                "X-Signature": "sha1=7b71f885ccb13d9b1e349b4e14aa28bbc3140173",
+                "X-Hub-Signature": "sha1=c401ad18c5ed1b0b19d37a4e0e5dab958b6b9a2f",
                 "Authorization": "Basic " + auth_value
             }
         )
@@ -69,7 +69,7 @@ class TestOn(object):
             "/",
             body=body,
             headers={
-                "X-Signature": "sha1=7b71f885ccb13d9b1e349b4e14aa28bbc3140173",
+                "X-Hub-Signature": "sha1=c401ad18c5ed1b0b19d37a4e0e5dab958b6b9a2f",
                 "Authorization": "Basic " + auth_value
             }
         )

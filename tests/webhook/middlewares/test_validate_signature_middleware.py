@@ -23,41 +23,43 @@ class TestProcessRequest(object):
             middleware.process_resource(request, response, Mock(), {})
 
         exception = excinfo.value
-        assert exception.description == ("The value provided for the X-Signature header is invalid. "
+        assert exception.description == ("The value provided for the X-Hub-Signature header is invalid. "
                                          "The request's signature is missing.")
 
     def test_raises_exception_if_invalid_signature(self, middleware, response):
         request = FACTORY.create_http_request(
-            headers={"X-Signature": "sha1=invalid"})
+            headers={"X-Hub-Signature": "sha1=invalid"})
         with pytest.raises(falcon.HTTPInvalidHeader) as excinfo:
             middleware.process_resource(request, response, Mock(), {})
 
         exception = excinfo.value
-        assert exception.description == ("The value provided for the X-Signature header"
+        assert exception.description == ("The value provided for the X-Hub-Signature header"
                                          " is invalid. The request's signature is invalid.")
 
     def test_raises_execption_if_invalid_hash_function(self, middleware, response):
         request = FACTORY.create_http_request(
-            headers={"X-Signature": "md5=invalid"})
+            headers={"X-Hub-Signature": "md5=invalid"})
         with pytest.raises(falcon.HTTPInvalidHeader) as excinfo:
             middleware.process_resource(request, response, Mock(), {})
 
         exception = excinfo.value
-        assert exception.description == ("The value provided for the X-Signature header is invalid. "
+        assert exception.description == ("The value provided for the X-Hub-Signature header is invalid. "
                                          "The request's signature hash function is "
                                          "invalid (should be one of ['sha1']).")
 
     def test_raises_execption_if_invalid_format(self, middleware, response):
         request = FACTORY.create_http_request(
-            headers={"X-Signature": "invalid_format"})
+            headers={"X-Hub-Signature": "invalid_format"})
         with pytest.raises(falcon.HTTPInvalidHeader) as excinfo:
             middleware.process_resource(request, response, Mock(), {})
 
         exception = excinfo.value
-        assert exception.description == ("The value provided for the X-Signature header is invalid. "
+        assert exception.description == ("The value provided for the X-Hub-Signature header is invalid. "
                                          "The request's signature format is invalid.")
 
     def test_does_not_raises_exception_if_valid(self, middleware, response):
-        request = FACTORY.create_http_request(body="{}",
-                                              headers={"X-Signature": "sha1=7876c938d38e99b954b3d839c7bafb343d29e776"})
+        request = FACTORY.create_http_request(
+            body="{}",
+            headers={"X-Hub-Signature": "sha1=fc2bdea0e6a9e0dc333dece7568b5c3337a92342"}
+        )
         middleware.process_resource(request, response, Mock(), {})

@@ -1,4 +1,5 @@
 import falcon
+from copy import copy
 from lupin import constructor
 from clustaar.schemas import v1
 from .falcon import HTTPResponse, HTTPRequest
@@ -11,14 +12,15 @@ MAPPER = v1.get_mapper(factory=constructor)
 
 
 class Webhook(object):
-    def __init__(self, auth_username=None, auth_password=None, private_key=None):
+    def __init__(self, auth_username=None, auth_password=None, private_key=None, middlewares=None):
         """
         Args:
             auth_username (str): HTTP authentication username
             auth_password (str): HTTP authentication password
             private_key (str): key used to validate signatures
+            middlewares (list): list of falcon middlewares
         """
-        middlewares = []
+        middlewares = copy(middlewares) if middlewares else []
         if private_key:
             middlewares.append(ValidateSignatureMiddleware(private_key))
         if auth_username and auth_password:

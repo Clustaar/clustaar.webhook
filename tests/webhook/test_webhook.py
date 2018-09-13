@@ -1,3 +1,4 @@
+from freezegun import freeze_time
 from unittest.mock import Mock
 from base64 import b64encode
 import falcon
@@ -11,7 +12,8 @@ from tests.utils import resource_content
 def webhook():
     return Webhook(private_key="test",
                    auth_username="admin",
-                   auth_password="p@ssword")
+                   auth_password="p@ssword",
+                   request_max_age=None)
 
 
 @pytest.fixture
@@ -48,7 +50,7 @@ class TestCall(object):
         handler = Mock(return_value=response)
         body = resource_content("webhook_request.json")
         webhook.on("conversation.step_reached", handler)
-        result = client.simulate_post(
+        client.simulate_post(
             "/",
             body=body,
             headers={
@@ -58,6 +60,23 @@ class TestCall(object):
         )
         assert handler.called
 
+    @freeze_time("Thu, 13 Sep 2018 11:48:23 GMT")
+    def test_handles_old_requests(self, client, auth_value):
+        webhook = Webhook(request_max_age=5)
+        client = falcon.testing.TestClient(webhook)
+        body = resource_content("webhook_request.json")
+        result = client.simulate_post("/",
+                                      body=body,
+                                      headers={
+                                          "X-Hub-Signature": "sha1=c401ad18c5ed1b0b19d37a4e0e5dab958b6b9a2f",
+                                          "Authorization": "Basic " + auth_value,
+                                          "Date": "Thu, 13 Sep 2018 11:48:13 GMT"
+                                      })
+        assert result.json == {
+            "description": "Request is too old",
+            "title": "400 Bad Request"
+        }
+
 
 class TestOn(object):
     def test_register_a_new_event_handler(self, webhook, auth_value, client):
@@ -65,7 +84,7 @@ class TestOn(object):
         handler = Mock(return_value=response)
         body = resource_content("webhook_request.json")
         webhook.on("conversation.step_reached", handler)
-        result = client.simulate_post(
+        client.simulate_post(
             "/",
             body=body,
             headers={

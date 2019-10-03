@@ -15,7 +15,7 @@ def router():
 
 
 @pytest.fixture
-def request():
+def http_request():
     data = {
         "topic": "step_reached"
     }
@@ -28,22 +28,22 @@ def event():
 
 
 class TestAdd(object):
-    def test_register_a_new_route(self, router, request, event, handler):
-        assert router.find(request) is None
+    def test_register_a_new_route(self, router, http_request, event, handler):
+        assert router.find(http_request) is None
         router.add("step_reached", handler)
-        assert router.find(request) is not None
+        assert router.find(http_request) is not None
 
 
 class TestFind(object):
-    def test_returns_none_if_no_route_found(self, router, request):
-        route = router.find(request)
+    def test_returns_none_if_no_route_found(self, router, http_request):
+        route = router.find(http_request)
         assert route is None
 
-    def test_returns_right_route(self, router, handler, request):
+    def test_returns_right_route(self, router, handler, http_request):
         router.add("step_reached", handler)
         handler2 = Mock()
         router.add("story_fallback_triggered", handler2)
 
-        route = router.find(request)
-        route.process(request, None, None)
+        route = router.find(http_request)
+        route.process(http_request, None, None)
         assert handler.called

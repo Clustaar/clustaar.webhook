@@ -3,16 +3,16 @@ from tests.utils import FACTORY
 
 
 @pytest.fixture
-def request():
+def http_request():
     return FACTORY.create_http_request(body="{}")
 
 
 class TestBody(object):
-    def test_returns_request_body_multiple_times(self, request):
-        assert request.body == b"{}"
-        assert request.body == b"{}"
+    def test_returns_request_body_multiple_times(self, http_request):
+        assert http_request.body == b"{}"
+        assert http_request.body == b"{}"
 
 
 class TestJSON(object):
-    def test_returns_dict(self, request):
-        assert request.json == {}
+    def test_returns_dict(self, http_request):
+        assert http_request.json == {}

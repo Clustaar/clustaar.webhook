@@ -4,6 +4,7 @@ import ujson as json
 
 class HTTPRequest(Request):
     """Helper methods for falcon Request class"""
+
     _json = None
     _body = None
 

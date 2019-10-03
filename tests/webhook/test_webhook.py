@@ -10,10 +10,9 @@ from tests.utils import resource_content
 
 @pytest.fixture
 def webhook():
-    return Webhook(private_key="test",
-                   auth_username="admin",
-                   auth_password="p@ssword",
-                   request_max_age=None)
+    return Webhook(
+        private_key="test", auth_username="admin", auth_password="p@ssword", request_max_age=None
+    )
 
 
 @pytest.fixture
@@ -28,21 +27,24 @@ def auth_value():
 
 class TestCall(object):
     def test_handles_invalid_signature(self, client, auth_value):
-        result = client.simulate_post("/", headers={
-            "Authorization": "Basic " + auth_value
-        })
+        result = client.simulate_post("/", headers={"Authorization": "Basic " + auth_value})
         assert result.json == {
-            "description": ("The value provided for the X-Hub-Signature header is invalid. "
-                            "The request's signature is missing."),
-            "title": "Invalid header value"
+            "description": (
+                "The value provided for the X-Hub-Signature header is invalid. "
+                "The request's signature is missing."
+            ),
+            "title": "Invalid header value",
         }
 
     def test_handles_invalid_credentials(self, client):
-        result = client.simulate_post("/", body="{}",
-                                      headers={"X-Hub-Signature": "sha1=fc2bdea0e6a9e0dc333dece7568b5c3337a92342"})
+        result = client.simulate_post(
+            "/",
+            body="{}",
+            headers={"X-Hub-Signature": "sha1=fc2bdea0e6a9e0dc333dece7568b5c3337a92342"},
+        )
         assert result.json == {
             "description": "This call needs authentication",
-            "title": "Invalid credentials"
+            "title": "Invalid credentials",
         }
 
     def test_executes_handler_if_valid_request(self, webhook, client, auth_value):
@@ -55,8 +57,8 @@ class TestCall(object):
             body=body,
             headers={
                 "X-Hub-Signature": "sha1=c401ad18c5ed1b0b19d37a4e0e5dab958b6b9a2f",
-                "Authorization": "Basic " + auth_value
-            }
+                "Authorization": "Basic " + auth_value,
+            },
         )
         assert handler.called
 
@@ -65,17 +67,16 @@ class TestCall(object):
         webhook = Webhook(request_max_age=5)
         client = falcon.testing.TestClient(webhook)
         body = resource_content("webhook_request.json")
-        result = client.simulate_post("/",
-                                      body=body,
-                                      headers={
-                                          "X-Hub-Signature": "sha1=c401ad18c5ed1b0b19d37a4e0e5dab958b6b9a2f",
-                                          "Authorization": "Basic " + auth_value,
-                                          "Date": "Thu, 13 Sep 2018 11:48:13 GMT"
-                                      })
-        assert result.json == {
-            "description": "Request is too old",
-            "title": "400 Bad Request"
-        }
+        result = client.simulate_post(
+            "/",
+            body=body,
+            headers={
+                "X-Hub-Signature": "sha1=c401ad18c5ed1b0b19d37a4e0e5dab958b6b9a2f",
+                "Authorization": "Basic " + auth_value,
+                "Date": "Thu, 13 Sep 2018 11:48:13 GMT",
+            },
+        )
+        assert result.json == {"description": "Request is too old", "title": "400 Bad Request"}
 
 
 class TestOn(object):
@@ -89,7 +90,7 @@ class TestOn(object):
             body=body,
             headers={
                 "X-Hub-Signature": "sha1=c401ad18c5ed1b0b19d37a4e0e5dab958b6b9a2f",
-                "Authorization": "Basic " + auth_value
-            }
+                "Authorization": "Basic " + auth_value,
+            },
         )
         assert handler.called

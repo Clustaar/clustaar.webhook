@@ -14,8 +14,14 @@ MAPPER = v1.get_mapper(factory=constructor)
 
 
 class Webhook(object):
-    def __init__(self, auth_username=None, auth_password=None, private_key=None, middlewares=None,
-                 request_max_age=REQUEST_MAX_AGE):
+    def __init__(
+        self,
+        auth_username=None,
+        auth_password=None,
+        private_key=None,
+        middlewares=None,
+        request_max_age=REQUEST_MAX_AGE,
+    ):
         """
         Args:
             auth_username (str): HTTP authentication username
@@ -35,9 +41,9 @@ class Webhook(object):
         if request_max_age is not None:
             middlewares.append(ReplayPreventionMiddleware(request_max_age))
 
-        self._api = falcon.API(middleware=middlewares,
-                               request_type=HTTPRequest,
-                               response_type=HTTPResponse)
+        self._api = falcon.API(
+            middleware=middlewares, request_type=HTTPRequest, response_type=HTTPResponse
+        )
 
         self._router = Router()
         events_handler = EventsHandler(self._router, MAPPER, v1.WEBHOOK_REQUEST)

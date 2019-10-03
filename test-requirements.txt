@@ -2,8 +2,12 @@ pytest-cov
 pytest
 pytest-mock
 pytest-sugar
-pytest-pep8
+pytest-codestyle
+pytest-black
 
 ipdb
 tox
 freezegun
+
+pre-commit
+

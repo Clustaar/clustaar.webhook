@@ -14,9 +14,7 @@ class Factory(object):
         if json is not None:
             body = ujson.dumps(json)
 
-        env = create_environ(headers=headers,
-                             query_string=query_string,
-                             body=body)
+        env = create_environ(headers=headers, query_string=query_string, body=body)
         request = HTTPRequest(env)
         return request
 

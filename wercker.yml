@@ -14,5 +14,8 @@ build:
             name: Install project
             code: pip install -e .
         - script:
+            name: Check files are blackened
+            code: black --check src/
+        - script:
             name: Run tests
-            code: py.test tests
+            code: py.test --black tests

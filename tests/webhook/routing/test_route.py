@@ -21,10 +21,7 @@ def route(handler, filters):
 
 @pytest.fixture
 def http_request():
-    data = {
-        "topic": "step_reached",
-        "botID": "507f1f77bcf86cd799439011"
-    }
+    data = {"topic": "step_reached", "botID": "507f1f77bcf86cd799439011"}
     return FACTORY.create_http_request(json=data)
 
 
@@ -41,10 +38,7 @@ class TestMatches(object):
         assert not route.matches(http_request)
 
     def test_returns_true_if_all_filters_matche(self, route, filters, http_request):
-        filters.extend([
-            lambda http_request: True,
-            lambda http_request: True
-        ])
+        filters.extend([lambda http_request: True, lambda http_request: True])
         assert route.matches(http_request)
 
 

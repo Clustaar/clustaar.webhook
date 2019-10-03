@@ -1,0 +1,6 @@
+[build-system]
+requires = ["setuptools", "pip", "wheel"]
+ 
+[tool.black]
+line-length = 100
+

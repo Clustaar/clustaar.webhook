@@ -18,9 +18,7 @@ class ValidateSignatureMiddleware(object):
             private_key (str): private used for validating payload signature
         """
         self._private_key = private_key.encode()
-        self._hash_functions = {
-            "sha1": hashlib.sha1
-        }
+        self._hash_functions = {"sha1": hashlib.sha1}
 
     def process_resource(self, req, resp, resource, params):
         """Falcon callback.
@@ -52,16 +50,17 @@ class ValidateSignatureMiddleware(object):
         """
         hash_function = self._hash_functions.get(hash_function_name)
         if not hash_function:
-            self._raise("The request's signature hash function is invalid "
-                        "(should be one of %s)." % list(self._hash_functions.keys()))
+            self._raise(
+                "The request's signature hash function is invalid "
+                "(should be one of %s)." % list(self._hash_functions.keys())
+            )
 
         signed_headers = ("date",)
-        buffer = "\n".join(["%s=%s" % (header, req.get_header(header))
-                            for header in signed_headers])
+        buffer = "\n".join(
+            ["%s=%s" % (header, req.get_header(header)) for header in signed_headers]
+        )
         buffer += "\n" + req.body.decode("utf-8")
-        expected_signature = hmac.new(self._private_key,
-                                      buffer.encode(),
-                                      hash_function).hexdigest()
+        expected_signature = hmac.new(self._private_key, buffer.encode(), hash_function).hexdigest()
         if expected_signature != signature:
             self._raise("The request's signature is invalid.")
 

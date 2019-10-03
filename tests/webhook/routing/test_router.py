@@ -16,9 +16,7 @@ def router():
 
 @pytest.fixture
 def http_request():
-    data = {
-        "topic": "step_reached"
-    }
+    data = {"topic": "step_reached"}
     return FACTORY.create_http_request(json=data)
 
 

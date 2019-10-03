@@ -8,6 +8,7 @@ class ReplayPreventionMiddleware(object):
     """Looks into the `Date` header of the request, if the request is older than a certain number
     of seconds then the request will be discared.
     """
+
     def __init__(self, request_max_age):
         """
         Args:

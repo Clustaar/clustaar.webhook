@@ -50,5 +50,6 @@ class BasicAuthenticationMiddleware(object):
         return auth_values
 
     def _raise_invalid_credentials(self):
-        raise falcon.HTTPForbidden(title="Invalid credentials",
-                                   description="This call needs authentication")
+        raise falcon.HTTPForbidden(
+            title="Invalid credentials", description="This call needs authentication"
+        )

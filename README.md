@@ -4,7 +4,6 @@
 `clustaar.webhook` is a framework to build webhooks for the [clustaar platform](https://clustaar.com).
 
 More documentation is available for building webhooks on https://developers.clustaar.com
-![Clustaar Logo](https://clustaar.com/wp-content/uploads/2016/07/logo-black-1.png)
 
 ## Example
 

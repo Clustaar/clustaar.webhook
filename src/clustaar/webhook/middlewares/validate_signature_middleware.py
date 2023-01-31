@@ -61,6 +61,7 @@ class ValidateSignatureMiddleware(object):
         )
         buffer += "\n" + req.body.decode("utf-8")
         expected_signature = hmac.new(self._private_key, buffer.encode(), hash_function).hexdigest()
+
         if expected_signature != signature:
             self._raise("The request's signature is invalid.")
 

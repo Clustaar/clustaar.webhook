@@ -1,10 +1,12 @@
-from freezegun import freeze_time
-from unittest.mock import Mock
 from base64 import b64encode
+from unittest.mock import Mock
+
 import falcon
 import pytest
-from clustaar.webhook import Webhook
 from clustaar.schemas.models import StepReachedResponse
+from freezegun import freeze_time
+
+from clustaar.webhook import Webhook
 from tests.utils import resource_content
 
 
@@ -30,7 +32,7 @@ class TestCall(object):
         result = client.simulate_post("/", headers={"Authorization": "Basic " + auth_value})
         assert result.json == {
             "description": (
-                "The value provided for the X-Hub-Signature header is invalid. "
+                "The value provided for the \"X-Hub-Signature\" header is invalid. "
                 "The request's signature is missing."
             ),
             "title": "Invalid header value",

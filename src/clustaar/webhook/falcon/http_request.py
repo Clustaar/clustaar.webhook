@@ -16,7 +16,7 @@ class HTTPRequest(Request):
             str: request body
         """
         if self._body is None:
-            self._body = self.stream.read()
+            self._body = self.stream.read(self.content_length or 0)
 
         return self._body
 

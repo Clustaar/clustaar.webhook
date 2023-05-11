@@ -24,7 +24,7 @@ class TestProcessRequest(object):
 
         exception = excinfo.value
         assert exception.description == (
-            "The value provided for the X-Hub-Signature header is invalid. "
+            "The value provided for the \"X-Hub-Signature\" header is invalid. "
             "The request's signature is missing."
         )
 
@@ -35,7 +35,7 @@ class TestProcessRequest(object):
 
         exception = excinfo.value
         assert exception.description == (
-            "The value provided for the X-Hub-Signature header"
+            "The value provided for the \"X-Hub-Signature\" header"
             " is invalid. The request's signature is invalid."
         )
 
@@ -46,7 +46,7 @@ class TestProcessRequest(object):
 
         exception = excinfo.value
         assert exception.description == (
-            "The value provided for the X-Hub-Signature header is invalid. "
+            "The value provided for the \"X-Hub-Signature\" header is invalid. "
             "The request's signature hash function is "
             "invalid (should be one of ['sha1'])."
         )
@@ -58,7 +58,7 @@ class TestProcessRequest(object):
 
         exception = excinfo.value
         assert exception.description == (
-            "The value provided for the X-Hub-Signature header is invalid. "
+            "The value provided for the \"X-Hub-Signature\" header is invalid. "
             "The request's signature format is invalid."
         )
 

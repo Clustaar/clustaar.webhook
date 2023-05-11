@@ -1,0 +1,59 @@
+# Build and publish package on our s3pypi
+
+name: Build package
+
+on:
+  # Auto run after Launch Tests if branch is master
+  workflow_run:
+    workflows: [Launch Tests]
+    types:
+      - completed
+    branches: [master]
+
+  # Manual run
+  workflow_dispatch:
+    inputs:
+      branche:
+
+jobs:
+  # Publish package when branch is master
+  publish-package:
+    strategy:
+      matrix:
+        python-version: ["3.10"]
+
+    runs-on: ubuntu-latest
+
+    # Run if manual or if Launch Tests was a success
+    if: ${{ github.event.workflow_run.conclusion != 'failure' && github.event.workflow_run.conclusion != 'cancelled' }}
+    steps:
+      - name: Set up code workspace
+        uses: actions/checkout@v3
+        # Not possible to use shallow clone as we need git describe
+        with:
+          # Ignore branch for workflow_dispatch: always use master
+          ref: "master"
+          fetch-depth: 0
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "pip"
+
+      - name: Build package
+        run: |
+          python -m pip install --upgrade pip
+          pip install -U setuptools "pyscaffold<4"
+          python setup.py sdist
+          echo "clustaar.webhook==$(git describe --tags --abbrev=0) has been build"
+        env:
+          CLUSTAAR_PYPI_SECRET: ${{ secrets.CLUSTAAR_PYPI_SECRET }}
+          S3_PYPI_VERSION: "0.11.1"
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CI_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CI_SECRET }}
+      - name: Publish package
+        uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
+        with:
+          user: clustaar
+          password: ${{ secrets.PYPI_CLUSTAAR_PWD }}
